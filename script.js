@@ -18,29 +18,79 @@ function createTimeTable() {
     const tableHTML = `
         <thead>
             <tr>
-                <th>เวลา</th>
-                <th>จันทร์</th>
-                <th>อังคาร</th>
-                <th>พุธ</th>
-                <th>พฤหัสบดี</th>
-                <th>ศุกร์</th>
-                <th>เสาร์</th>
+                <th>วัน</th>
+                ${[8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(hour => `
+                    <th>${hour}:00 - ${hour + 1}:00</th>
+                `).join('')}
             </tr>
         </thead>
         <tbody>
-            ${[8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(hour => `
-                <tr>
-                    <td>${hour}:00 - ${hour + 1}:00</td>
-                    ${['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => `
-                        <td class="time-slot" 
-                            data-court="${court}" 
-                            data-time="${hour}:00" 
-                            data-day="${day}">
-                            ${isBooked(court, day, hour) ? 'จองแล้ว' : 'ว่าง'}
-                        </td>
-                    `).join('')}
-                </tr>
-            `).join('')}
+            <tr>
+                <td>จันทร์</td>
+                ${[8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(hour => `
+                    <td class="time-slot" 
+                        data-court="${court}" 
+                        data-time="${hour}:00" 
+                        data-day="Mon">
+                        ${isBooked(court, 'Mon', hour) ? 'จองแล้ว' : 'ว่าง'}
+                    </td>
+                `).join('')}
+            </tr>
+            <tr>
+                <td>อังคาร</td>
+                ${[8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(hour => `
+                    <td class="time-slot" 
+                        data-court="${court}" 
+                        data-time="${hour}:00" 
+                        data-day="Tue">
+                        ${isBooked(court, 'Tue', hour) ? 'จองแล้ว' : 'ว่าง'}
+                    </td>
+                `).join('')}
+            </tr>
+            <tr>
+                <td>พุธ</td>
+                ${[8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(hour => `
+                    <td class="time-slot" 
+                        data-court="${court}" 
+                        data-time="${hour}:00" 
+                        data-day="Wed">
+                        ${isBooked(court, 'Wed', hour) ? 'จองแล้ว' : 'ว่าง'}
+                    </td>
+                `).join('')}
+            </tr>
+            <tr>
+                <td>พฤหัสบดี</td>
+                ${[8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(hour => `
+                    <td class="time-slot" 
+                        data-court="${court}" 
+                        data-time="${hour}:00" 
+                        data-day="Thu">
+                        ${isBooked(court, 'Thu', hour) ? 'จองแล้ว' : 'ว่าง'}
+                    </td>
+                `).join('')}
+            </tr>
+            <tr>
+                <td>ศุกร์</td>
+                ${[8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(hour => `
+                    <td class="time-slot" 
+                        data-court="${court}" 
+                        data-time="${hour}:00" 
+                        data-day="Fri">
+                        ${isBooked(court, 'Fri', hour) ? 'จองแล้ว' : 'ว่าง'}
+                    </td>
+                `).join('')}
+            </tr>
+            <tr>
+                <td>เสาร์</td>
+                ${[8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(hour => `
+                    <td class="time-slot" 
+                        data-court="${court}" 
+                        data-time="${hour}:00" 
+                        data-day="Sat">
+                        ${isBooked(court, 'Sat', hour) ? 'จองแล้ว' : 'ว่าง'}
+                    </td>
+                `).join('')}
+            </tr>
         </tbody>
     `;
     timeTable.innerHTML = tableHTML;
@@ -78,6 +128,12 @@ form.addEventListener('submit', function (event) {
     const court = document.getElementById('court').value;
     const selectedSlots = document.querySelectorAll('.time-slot.selected');
     const totalAmount = selectedSlots.length * RATE;
+    const slipFile = document.getElementById('slip').files[0];
+
+    if (!slipFile) {
+        alert('กรุณาแนบสลิปการโอนเงิน');
+        return;
+    }
 
     // บันทึกการจอง
     selectedSlots.forEach(slot => {
@@ -87,6 +143,7 @@ form.addEventListener('submit', function (event) {
 
         COURT_BOOKINGS[key] = { name, amount: totalAmount };
         slot.classList.add('booked');
+        slot.setAttribute('data-booker', name);
     });
 
     // แสดงข้อความการจองสำเร็จ
@@ -95,7 +152,15 @@ form.addEventListener('submit', function (event) {
 
     // ปิดปุ่มยืนยันการจอง
     confirmButton.disabled = true;
+
+    // รีเฟรชตารางเวลาเพื่ออัปเดตการแสดงผล
+    createTimeTable();
 });
 
 // เรียกฟังก์ชันสร้างตารางเวลาเมื่อหน้าโหลด
 createTimeTable();
+
+// เพิ่ม event listener สำหรับการเลือกคอร์ดใหม่
+document.getElementById('court').addEventListener('change', function () {
+    createTimeTable(); // เมื่อเลือกคอร์ดใหม่ให้สร้างตารางใหม่
+});
