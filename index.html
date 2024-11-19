@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Badminton Court Booking</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Badminton Court Booking</h1>
+    </header>
+
+    <main>
+        <section class="booking">
+            <h2>จองสนาม</h2>
+            <form id="booking-form">
+                <label for="name">ชื่อผู้จอง:</label>
+                <input type="text" id="name" name="name" placeholder="กรอกชื่อ" required>
+
+                <label for="court">เลือกคอร์ด:</label>
+                <select id="court" name="court">
+                    <option value="1">Court 1</option>
+                    <option value="2">Court 2</option>
+                    <option value="3">Court 3</option>
+                    <option value="4">Court 4</option>
+                    <option value="5">Court 5</option>
+                    <option value="6">Court 6</option>
+                    <option value="7">Court 7</option>
+                    <option value="8">Court 8</option>
+                    <option value="9">Court 9</option>
+                    <option value="10">Court 10</option>
+                    <option value="11">Court 11</option>
+                </select>
+
+                <h3>เลือกวันและเวลา:</h3>
+                <table id="time-table">
+                    <!-- ตารางวันและเวลา จะแสดงขึ้นโดย Javascript -->
+                </table>
+
+                <h3>จำนวนเงินที่ต้องจ่าย:</h3>
+                <div id="amount">0 บาท</div>
+
+                <label for="account-number">เลขบัญชี (กสิกรไทย):</label>
+                <input type="text" id="account-number" value="048-3-75314-4" disabled>
+
+                <label for="account-name">ชื่อบัญชี (กสิกรไทย):</label>
+                <input type="text" id="account-name" value="คัมภิรดา เทพพิทักษ์" disabled>
+
+                <label for="slip">แนบสลิปการโอน:</label>
+                <input type="file" id="slip" name="slip" accept="image/*" required>
+
+                <button type="submit" id="confirm-booking" disabled>ยืนยันการจอง</button>
+            </form>
+        </section>
+
+        <section class="status">
+            <h2>สถานะการจอง</h2>
+            <div id="status-message"></div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.1/dist/tesseract.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
